@@ -104,7 +104,6 @@ public final class DecodeHandler extends Handler {
 
     public void stop() {
         state = State.DONE;
-        CameraManager.get().stopPreview();
         if (decodeThread != null) {
             decodeThread.stop();
         }

@@ -14,8 +14,11 @@ import com.ashlikun.zxing.camera.CameraManager;
  * 功能介绍：
  */
 public class ZxingSurfaceTextureListener implements TextureView.SurfaceTextureListener {
+    SurfaceTexture surface;
     Zxing zxing;
     Context context;
+    int width;
+    int height;
 
     public ZxingSurfaceTextureListener(Context context, Zxing zxing) {
         this.context = context;
@@ -24,6 +27,16 @@ public class ZxingSurfaceTextureListener implements TextureView.SurfaceTextureLi
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        this.surface = surface;
+        this.width = width;
+        this.height = height;
+        startPreview();
+    }
+
+    public void startPreview() {
+        if (CameraManager.get().isPreviewing() || this.surface == null) {
+            return;
+        }
         try {
             //打开摄像头
             CameraManager.get().openCamera(width, height, surface);
@@ -38,6 +51,15 @@ public class ZxingSurfaceTextureListener implements TextureView.SurfaceTextureLi
         }
     }
 
+    public void stopPreview() {
+        if (CameraManager.get().getCamera() != null && CameraManager.get().isPreviewing()) {
+            CameraManager.get().stopPreview();
+            CameraManager.get().getPreviewCallback().setHandler(null, 0);
+            CameraManager.get().getAutoFocusCallback().setHandler(null, 0);
+            CameraManager.get().setPreviewing(false);
+        }
+    }
+
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
 
@@ -45,12 +67,8 @@ public class ZxingSurfaceTextureListener implements TextureView.SurfaceTextureLi
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-        if (CameraManager.get().getCamera() != null && CameraManager.get().isPreviewing()) {
-            CameraManager.get().stopPreview();
-            CameraManager.get().getPreviewCallback().setHandler(null, 0);
-            CameraManager.get().getAutoFocusCallback().setHandler(null, 0);
-            CameraManager.get().setPreviewing(false);
-        }
+        this.surface = null;
+        stopPreview();
         return true;
     }
 

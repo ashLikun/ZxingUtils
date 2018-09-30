@@ -25,6 +25,7 @@ public class Zxing {
     protected DecodeHandler decodeHandler;
     private DecodeAudio decodeAudio;
     DecodeParams decodeParams;
+    ZxingSurfaceTextureListener zxingSurfaceTextureListener;
 
     /**
      * @param textureView   渲染的view
@@ -39,7 +40,7 @@ public class Zxing {
         this.context = textureView.getContext();
         this.callback = callback;
         decodeAudio = new DecodeAudio(context);
-        textureView.setSurfaceTextureListener(new ZxingSurfaceTextureListener(context, this));
+        textureView.setSurfaceTextureListener(zxingSurfaceTextureListener = new ZxingSurfaceTextureListener(context, this));
         decodeParams = new DecodeParams(decodeFormats, characterSet,
                 bridge, null);
     }
@@ -87,6 +88,7 @@ public class Zxing {
      */
     public void onResume() {
         if (decodeHandler != null) {
+            zxingSurfaceTextureListener.startPreview();
             decodeHandler.start();
         }
     }
@@ -97,8 +99,9 @@ public class Zxing {
     public void onPause() {
         if (decodeHandler != null) {
             decodeHandler.stop();
+            zxingSurfaceTextureListener.stopPreview();
         }
-        CameraManager.get().stopPreview();
+
     }
 
     /**
@@ -108,8 +111,7 @@ public class Zxing {
         if (decodeAudio != null) {
             decodeAudio.release();
         }
-        onPause();
-        CameraManager.get().releaseCamera();
+        zxingSurfaceTextureListener.stopPreview();
     }
 
     /**
