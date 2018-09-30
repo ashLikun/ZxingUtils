@@ -20,9 +20,13 @@ public class ZxingSurfaceTextureListener implements TextureView.SurfaceTextureLi
     int width;
     int height;
 
-    public ZxingSurfaceTextureListener(Context context, Zxing zxing) {
-        this.context = context;
+    public ZxingSurfaceTextureListener(TextureView textureView, Zxing zxing) {
+        this.context = textureView.getContext();
         this.zxing = zxing;
+        surface = textureView.getSurfaceTexture();
+        width = textureView.getWidth();
+        height = textureView.getHeight();
+        startPreview();
     }
 
     @Override
@@ -34,7 +38,7 @@ public class ZxingSurfaceTextureListener implements TextureView.SurfaceTextureLi
     }
 
     public void startPreview() {
-        if (CameraManager.get().isPreviewing() || this.surface == null) {
+        if (CameraManager.get().isPreviewing() || this.surface == null || width == 0 || height == 0) {
             return;
         }
         try {

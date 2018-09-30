@@ -40,7 +40,8 @@ public class Zxing {
         this.context = textureView.getContext();
         this.callback = callback;
         decodeAudio = new DecodeAudio(context);
-        textureView.setSurfaceTextureListener(zxingSurfaceTextureListener = new ZxingSurfaceTextureListener(context, this));
+        zxingSurfaceTextureListener = new ZxingSurfaceTextureListener(textureView, this);
+        textureView.setSurfaceTextureListener(zxingSurfaceTextureListener);
         decodeParams = new DecodeParams(decodeFormats, characterSet,
                 bridge, null);
     }
