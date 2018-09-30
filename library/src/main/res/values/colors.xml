@@ -1,0 +1,9 @@
+<resources>
+
+    <!--蒙版的颜色-->
+    <color name="viewfinder_mask">#60000000</color>
+    <!--结果图片的边框-->
+    <color name="viewfinder_result_view">#b0000000</color>
+    <!--结果小点点的颜色-->
+    <color name="viewfinder_possible_result_points">#c0ffff00</color>
+</resources>

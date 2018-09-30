@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ViewfinderView">
+        <attr name="inner_width" format="dimension" />
+        <attr name="inner_height" format="dimension" />
+        <attr name="inner_margintop" format="dimension" />
+        <attr name="inner_corner_color" format="color" />
+        <attr name="inner_corner_length" format="dimension" />
+        <attr name="inner_corner_width" format="dimension" />
+        <attr name="inner_frame_line_width" format="dimension" />
+        <attr name="inner_scan_src" format="reference" />
+        <!--扫描速度,就是多少ms后绘制一次默认30-->
+        <attr name="inner_scan_speed" format="integer" />
+        <attr name="inner_scan_iscircle" format="boolean" />
+    </declare-styleable>
+
+</resources>
