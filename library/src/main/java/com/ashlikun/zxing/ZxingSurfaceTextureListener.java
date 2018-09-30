@@ -26,6 +26,7 @@ public class ZxingSurfaceTextureListener implements TextureView.SurfaceTextureLi
         surface = textureView.getSurfaceTexture();
         width = textureView.getWidth();
         height = textureView.getHeight();
+        //防止延时设置时候viewyij初始化完毕，没有回调onSurfaceTextureAvailable
         startPreview();
     }
 
