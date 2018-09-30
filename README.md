@@ -18,6 +18,8 @@ allprojects {
 ```gradle
 dependencies {
     compile 'com.github.ashLikun:ZxingUtils:{latest version}'
+    //Zxing核心库
+    com.google.zxing:core:3.3.0
 }
 ```
 
