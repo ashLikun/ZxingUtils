@@ -36,6 +36,7 @@ dependencies {
    zxing.setLightChangListener(this);
    //开启解码成功的音效
    zxing.setPlayBeep(true);
+   zxing.create();
    
    //成功后可以调用这个方法继续识别
    zxing.reStart();

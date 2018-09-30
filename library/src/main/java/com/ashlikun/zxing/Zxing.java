@@ -25,7 +25,8 @@ public class Zxing {
     protected DecodeHandler decodeHandler;
     private DecodeAudio decodeAudio;
     DecodeParams decodeParams;
-    ZxingSurfaceTextureListener zxingSurfaceTextureListener;
+    TextureView textureView;
+    ZxingSurfaceTextureListener surfaceTextureListener;
 
     /**
      * @param textureView   渲染的view
@@ -39,11 +40,11 @@ public class Zxing {
                  IViewDecodeBridge bridge) {
         this.context = textureView.getContext();
         this.callback = callback;
+        this.textureView = textureView;
         decodeAudio = new DecodeAudio(context);
-        zxingSurfaceTextureListener = new ZxingSurfaceTextureListener(textureView, this);
-        textureView.setSurfaceTextureListener(zxingSurfaceTextureListener);
         decodeParams = new DecodeParams(decodeFormats, characterSet,
                 bridge, null);
+
     }
 
     /**
@@ -76,6 +77,15 @@ public class Zxing {
     }
 
     /**
+     * 设置完全部配置后调用
+     */
+    public void create() {
+        //这个初始化可能直接启动摄像头了，放到最后
+        surfaceTextureListener = new ZxingSurfaceTextureListener(textureView, this);
+        textureView.setSurfaceTextureListener(surfaceTextureListener);
+    }
+
+    /**
      * 成功后可以调用这个方法继续识别
      */
     public void reStart() {
@@ -89,7 +99,9 @@ public class Zxing {
      */
     public void onResume() {
         if (decodeHandler != null) {
-            zxingSurfaceTextureListener.startPreview();
+            if (surfaceTextureListener != null) {
+                surfaceTextureListener.startPreview();
+            }
             decodeHandler.start();
         }
     }
@@ -100,7 +112,9 @@ public class Zxing {
     public void onPause() {
         if (decodeHandler != null) {
             decodeHandler.stop();
-            zxingSurfaceTextureListener.stopPreview();
+            if (surfaceTextureListener != null) {
+                surfaceTextureListener.stopPreview();
+            }
         }
 
     }
@@ -112,7 +126,9 @@ public class Zxing {
         if (decodeAudio != null) {
             decodeAudio.release();
         }
-        zxingSurfaceTextureListener.stopPreview();
+        if (surfaceTextureListener != null) {
+            surfaceTextureListener.stopPreview();
+        }
     }
 
     /**

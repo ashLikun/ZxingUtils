@@ -27,34 +27,46 @@ public class MainActivity extends AppCompatActivity implements ZxingCallback, On
         textureView = findViewById(R.id.textureView);
         viewfinderView = findViewById(R.id.viewfinderView);
         imageView = findViewById(R.id.imageView);
-        zxing = new Zxing(textureView,
-                this,
-                null,
-                null,
-                viewfinderView);
-        //设置亮度改变监听
-        zxing.setLightChangListener(this);
-        //开启解码成功的音效
-        zxing.setPlayBeep(true);
+        imageView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                zxing = new Zxing(textureView,
+                        MainActivity.this,
+                        null,
+                        null,
+                        viewfinderView);
+                //设置亮度改变监听
+                zxing.setLightChangListener(MainActivity.this);
+                //开启解码成功的音效
+                zxing.setPlayBeep(true);
+                zxing.create();
+            }
+        }, 1000);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        zxing.onResume();
+        if (zxing != null) {
+            zxing.onResume();
+        }
     }
 
 
     @Override
     protected void onPause() {
         super.onPause();
-        zxing.onPause();
+        if (zxing != null) {
+            zxing.onPause();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        zxing.onDestroy();
+        if (zxing != null) {
+            zxing.onDestroy();
+        }
     }
 
     @Override
