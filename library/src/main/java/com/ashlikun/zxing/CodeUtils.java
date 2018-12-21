@@ -16,7 +16,6 @@ import com.google.zxing.DecodeHintType;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.Result;
-import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
@@ -99,23 +98,42 @@ public class CodeUtils {
 
     /**
      * 生成二维码图片
+     */
+    public static Bitmap createImage(String text, int w, int h, Bitmap logo) {
+        return createImage(text, w, h, true, logo);
+    }
+
+    /**
+     * 生成二维码图片
      *
      * @param text
      * @param w
      * @param h
-     * @param logo
+     * @param isDeleteWhite 是否删除多余的白边
+     * @param logo          中间图标
      * @return
      */
-    public static Bitmap createImage(String text, int w, int h, Bitmap logo) {
+    public static Bitmap createImage(String text, int w, int h, boolean isDeleteWhite, Bitmap logo) {
         if (TextUtils.isEmpty(text)) {
             return null;
         }
         try {
-            Bitmap scaleLogo = getScaleLogo(logo, w, h);
+            Hashtable<EncodeHintType, Object> hints = new Hashtable<EncodeHintType, Object>();
+            hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+            //容错级别
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+            //设置空白边距的宽度
+            hints.put(EncodeHintType.MARGIN, 0);
+            BitMatrix bitMatrix = new QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, w, h, hints);
+            if (isDeleteWhite) {
+                bitMatrix = deleteWhite(bitMatrix);
+            }
+            w = bitMatrix.getWidth();
+            h = bitMatrix.getHeight();
 
+            Bitmap scaleLogo = getScaleLogo(logo, w, h);
             int offsetX = w / 2;
             int offsetY = h / 2;
-
             int scaleWidth = 0;
             int scaleHeight = 0;
             if (scaleLogo != null) {
@@ -124,17 +142,10 @@ public class CodeUtils {
                 offsetX = (w - scaleWidth) / 2;
                 offsetY = (h - scaleHeight) / 2;
             }
-            Hashtable<EncodeHintType, Object> hints = new Hashtable<EncodeHintType, Object>();
-            hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
-            //容错级别
-            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-            //设置空白边距的宽度
-            hints.put(EncodeHintType.MARGIN, 0);
-            BitMatrix bitMatrix = new QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, w, h, hints);
             int[] pixels = new int[w * h];
             for (int y = 0; y < h; y++) {
                 for (int x = 0; x < w; x++) {
-                    if (x >= offsetX && x < offsetX + scaleWidth && y >= offsetY && y < offsetY + scaleHeight) {
+                    if (scaleLogo != null && x >= offsetX && x < offsetX + scaleWidth && y >= offsetY && y < offsetY + scaleHeight) {
                         int pixel = scaleLogo.getPixel(x - offsetX, y - offsetY);
                         if (pixel == 0) {
                             if (bitMatrix.get(x, y)) {
@@ -157,10 +168,33 @@ public class CodeUtils {
                     Bitmap.Config.ARGB_8888);
             bitmap.setPixels(pixels, 0, w, 0, 0, w, h);
             return bitmap;
-        } catch (WriterException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 删除二维码白边
+     *
+     * @param matrix
+     * @return
+     */
+    private static BitMatrix deleteWhite(BitMatrix matrix) {
+        int[] rec = matrix.getEnclosingRectangle();
+        int resWidth = rec[2] + 1;
+        int resHeight = rec[3] + 1;
+
+        BitMatrix resMatrix = new BitMatrix(resWidth, resHeight);
+        resMatrix.clear();
+        for (int i = 0; i < resWidth; i++) {
+            for (int j = 0; j < resHeight; j++) {
+                if (matrix.get(i + rec[0], j + rec[1])) {
+                    resMatrix.set(i, j);
+                }
+            }
+        }
+        return resMatrix;
     }
 
     private static Bitmap getScaleLogo(Bitmap logo, int w, int h) {
