@@ -127,7 +127,7 @@ public class Zxing {
             decodeAudio.release();
         }
         if (surfaceTextureListener != null) {
-            surfaceTextureListener.stopPreview();
+            surfaceTextureListener.onDestroy();
         }
     }
 

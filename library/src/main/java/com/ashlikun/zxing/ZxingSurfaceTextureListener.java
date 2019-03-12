@@ -56,12 +56,23 @@ public class ZxingSurfaceTextureListener implements TextureView.SurfaceTextureLi
         }
     }
 
+
     public void stopPreview() {
-        if (CameraManager.get().getCamera() != null && CameraManager.get().isPreviewing()) {
+        if (CameraManager.get().getCamera() != null) {
             CameraManager.get().stopPreview();
             CameraManager.get().getPreviewCallback().setHandler(null, 0);
             CameraManager.get().getAutoFocusCallback().setHandler(null, 0);
             CameraManager.get().setPreviewing(false);
+            CameraManager.get().releaseCamera();
+        }
+    }
+    /**
+     * 释放相机一定要调用
+     */
+    public void onDestroy() {
+        if (CameraManager.get().getCamera() != null) {
+            stopPreview();
+            CameraManager.get().releaseCamera();
         }
     }
 
