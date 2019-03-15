@@ -49,7 +49,7 @@ public class CodeUtils {
         Bitmap mBitmap = BitmapFactory.decodeFile(path, options);
         options.inJustDecodeBounds = false; // 获取新的大小
 
-        int sampleSize = (int) (options.outHeight / (float) 600);
+        int sampleSize = (int) (options.outHeight / (float) 400);
 
         if (sampleSize <= 0) {
             sampleSize = 1;
@@ -100,10 +100,10 @@ public class CodeUtils {
             rawResult = reader.decodeWithState(new BinaryBitmap(new HybridBinarizer(source)));
         } catch (Exception e) {
             e.printStackTrace();
-            if (width > 80 && height > 80) {
+            if (width >= 100 && height >= 100) {
                 //失败了再次尝试
                 Matrix matrix = new Matrix();
-                matrix.postScale(0.8f, 0.8f);
+                matrix.postScale(0.7f, 0.7f);
                 Bitmap newBitmap = Bitmap.createBitmap(mBitmap, 0, 0, mBitmap.getWidth(), mBitmap.getHeight(), matrix, true);
                 repetDecode(reader, newBitmap, analyzeCallback);
                 mBitmap.recycle();
