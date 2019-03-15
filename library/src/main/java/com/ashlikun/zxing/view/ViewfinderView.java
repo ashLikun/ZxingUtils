@@ -142,7 +142,7 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
         // 扫描控件
         scanLight = BitmapFactory.decodeResource(getResources(), ta.getResourceId(R.styleable.ViewfinderView_inner_scan_src, R.drawable.scan_light));
         // 扫描速度
-        scan_velocity = (int) ta.getDimension(R.styleable.ViewfinderView_inner_scan_speed, 30);
+        scan_velocity = (int) ta.getInt(R.styleable.ViewfinderView_inner_scan_speed, 30);
         isCircle = ta.getBoolean(R.styleable.ViewfinderView_inner_scan_iscircle, true);
         ta.recycle();
     }
@@ -268,7 +268,6 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
         //边框线
         canvas.drawRect(frame, paint);
     }
-
 
 
     public void addPossibleResultPoint(ResultPoint point) {

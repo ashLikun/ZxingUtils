@@ -6,10 +6,10 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.text.TextUtils;
 
-import com.ashlikun.zxing.camera.BitmapLuminanceSource;
 import com.ashlikun.zxing.camera.CameraManager;
 import com.ashlikun.zxing.camera.PlanarYUVLuminanceSource;
 import com.ashlikun.zxing.decoding.DecodeFormatManager;
+import com.ashlikun.zxing.luminance.RGBHuiLuminanceSource;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
@@ -49,7 +49,7 @@ public class CodeUtils {
         Bitmap mBitmap = BitmapFactory.decodeFile(path, options);
         options.inJustDecodeBounds = false; // 获取新的大小
 
-        int sampleSize = (int) (options.outHeight / (float) 400);
+        int sampleSize = (int) (options.outHeight / (float) 800);
 
         if (sampleSize <= 0) {
             sampleSize = 1;
@@ -57,7 +57,7 @@ public class CodeUtils {
         options.inSampleSize = sampleSize;
         mBitmap = BitmapFactory.decodeFile(path, options);
 
-        MultiFormatReader multiFormatReader = new MultiFormatReader();
+        MultiFormatReader reader = new MultiFormatReader();
 
         // 解码的参数
         Hashtable<DecodeHintType, Object> hints = new Hashtable<DecodeHintType, Object>(2);
@@ -73,18 +73,43 @@ public class CodeUtils {
         }
         hints.put(DecodeHintType.POSSIBLE_FORMATS, decodeFormats);
         // 设置继续的字符编码格式为UTF8
-        // hints.put(DecodeHintType.CHARACTER_SET, "UTF8");
+        hints.put(DecodeHintType.CHARACTER_SET, "UTF8");
         // 设置解析配置参数
-        multiFormatReader.setHints(hints);
+        reader.setHints(hints);
 
+        repetDecode(reader, mBitmap, analyzeCallback);
+    }
+
+    /**
+     * 重复尝试解码
+     *
+     * @param reader
+     * @param mBitmap
+     * @param analyzeCallback
+     */
+    private static void repetDecode(MultiFormatReader reader, Bitmap mBitmap, AnalyzeCallback analyzeCallback) {
+
+        int width = mBitmap.getWidth();
+        int height = mBitmap.getHeight();
+        int[] pixels = new int[width * height];
+        mBitmap.getPixels(pixels, 0, width, 0, 0, width, height);
         // 开始对图像资源解码
         Result rawResult = null;
         try {
-            rawResult = multiFormatReader.decodeWithState(new BinaryBitmap(new HybridBinarizer(new BitmapLuminanceSource(mBitmap))));
+            RGBHuiLuminanceSource source = new RGBHuiLuminanceSource(width, height, pixels);
+            rawResult = reader.decodeWithState(new BinaryBitmap(new HybridBinarizer(source)));
         } catch (Exception e) {
             e.printStackTrace();
+            if (width > 80 && height > 80) {
+                //失败了再次尝试
+                Matrix matrix = new Matrix();
+                matrix.postScale(0.8f, 0.8f);
+                Bitmap newBitmap = Bitmap.createBitmap(mBitmap, 0, 0, mBitmap.getWidth(), mBitmap.getHeight(), matrix, true);
+                repetDecode(reader, newBitmap, analyzeCallback);
+                mBitmap.recycle();
+                return;
+            }
         }
-
         if (rawResult != null) {
             if (analyzeCallback != null) {
                 analyzeCallback.onAnalyzeSuccess(mBitmap, rawResult);
