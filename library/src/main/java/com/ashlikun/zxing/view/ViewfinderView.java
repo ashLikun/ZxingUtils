@@ -47,9 +47,7 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
     private static final int OPAQUE = 0xFF;
 
     private final Paint paint;
-    private Bitmap resultBitmap;
     private final int maskColor;
-    private final int resultColor;
     private final int resultPointColor;
     private Collection<ResultPoint> possibleResultPoints;
     private Collection<ResultPoint> lastPossibleResultPoints;
@@ -71,6 +69,10 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
      * 扫描线移动速度
      */
     private int scan_velocity;
+    /**
+     * 扫码的zxing识别的边框在界面边框的比例
+     */
+    private float scan_ratio;
     /**
      * 扫描线
      */
@@ -111,9 +113,7 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
         Resources resources = getResources();
         displayMetrics = resources.getDisplayMetrics();
         maskColor = resources.getColor(R.color.viewfinder_mask);
-        resultColor = resources.getColor(R.color.viewfinder_result_view);
         resultPointColor = resources.getColor(R.color.viewfinder_possible_result_points);
-        possibleResultPoints = new HashSet<>(5);
         initInnerRect(context, attrs);
     }
 
@@ -142,36 +142,35 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
         // 扫描控件
         scanLight = BitmapFactory.decodeResource(getResources(), ta.getResourceId(R.styleable.ViewfinderView_inner_scan_src, R.drawable.scan_light));
         // 扫描速度
-        scan_velocity = (int) ta.getInt(R.styleable.ViewfinderView_inner_scan_speed, 30);
-        isCircle = ta.getBoolean(R.styleable.ViewfinderView_inner_scan_iscircle, true);
+        scan_velocity = ta.getInt(R.styleable.ViewfinderView_inner_scan_speed, 30);
+        //扫码的zxing识别的边框在界面边框的比例
+        scan_ratio = ta.getFloat(R.styleable.ViewfinderView_inner_scan_image_ratio, 1.1f);
+        isCircle = ta.getBoolean(R.styleable.ViewfinderView_inner_scan_iscircle, false);
         ta.recycle();
     }
 
 
     @Override
     public void onDraw(Canvas canvas) {
-        Rect frame = getFramingRect();
+        Rect frame = getFramingRectShow();
         if (frame == null) {
             return;
         }
         int width = canvas.getWidth();
         int height = canvas.getHeight();
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(resultBitmap != null ? resultColor : maskColor);
+        paint.setColor(maskColor);
         canvas.drawRect(0, 0, width, frame.top, paint);
         canvas.drawRect(0, frame.top, frame.left, frame.bottom + 1, paint);
         canvas.drawRect(frame.right + 1, frame.top, width, frame.bottom + 1, paint);
         canvas.drawRect(0, frame.bottom + 1, width, height, paint);
 
-        if (resultBitmap != null) {
-            paint.setAlpha(OPAQUE);
-            canvas.drawBitmap(resultBitmap, frame.left, frame.top, paint);
-        } else {
 
-            drawFrameBounds(canvas, frame);
+        drawFrameBounds(canvas, frame);
 
-            drawScanLight(canvas, frame);
+        drawScanLight(canvas, frame);
 
+        if (isCircle && possibleResultPoints != null) {
             Collection<ResultPoint> currentPossible = possibleResultPoints;
             Collection<ResultPoint> currentLast = lastPossibleResultPoints;
             if (currentPossible.isEmpty()) {
@@ -182,25 +181,20 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
                 paint.setAlpha(OPAQUE);
                 paint.setColor(resultPointColor);
 
-                if (isCircle) {
-                    for (ResultPoint point : currentPossible) {
-                        canvas.drawCircle(frame.left + point.getX(), frame.top + point.getY(), 6.0f, paint);
-                    }
+                for (ResultPoint point : currentPossible) {
+                    canvas.drawCircle(frame.left + point.getX(), frame.top + point.getY(), 6.0f, paint);
                 }
             }
             if (currentLast != null) {
                 paint.setAlpha(OPAQUE / 2);
                 paint.setColor(resultPointColor);
-
-                if (isCircle) {
-                    for (ResultPoint point : currentLast) {
-                        canvas.drawCircle(frame.left + point.getX(), frame.top + point.getY(), 3.0f, paint);
-                    }
+                for (ResultPoint point : currentLast) {
+                    canvas.drawCircle(frame.left + point.getX(), frame.top + point.getY(), 3.0f, paint);
                 }
             }
-
-            postInvalidateDelayed(scan_velocity, frame.left, frame.top, frame.right, frame.bottom);
         }
+
+        postInvalidateDelayed(scan_velocity, frame.left, frame.top, frame.right, frame.bottom);
     }
 
 
@@ -271,7 +265,12 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
 
 
     public void addPossibleResultPoint(ResultPoint point) {
-        possibleResultPoints.add(point);
+        if (isCircle) {
+            if (possibleResultPoints == null) {
+                possibleResultPoints = new HashSet<>(5);
+            }
+            possibleResultPoints.add(point);
+        }
     }
 
     @Override
@@ -285,6 +284,22 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
     @Override
     public Rect getFramingRect() {
         try {
+            int fWidth = Math.min((int) (frameWidth * scan_ratio), getWidth());
+            int fHeight = Math.min((int) (frameHeight * scan_ratio), getHeight());
+            int leftOffset = (getWidth() - fWidth) / 2;
+            int topOffset = (getHeight() - fHeight) / 2 + innerMarginTop;
+            return new Rect(leftOffset, topOffset, leftOffset + fWidth, topOffset + fHeight);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 获取二维码放置的矩形区域(用于识别时候页面的边框)
+     */
+    public Rect getFramingRectShow() {
+        try {
             int leftOffset = (getWidth() - frameWidth) / 2;
             int topOffset = (getHeight() - frameHeight) / 2 + innerMarginTop;
             return new Rect(leftOffset, topOffset, leftOffset + frameWidth, topOffset + frameHeight);
@@ -293,6 +308,4 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
             return null;
         }
     }
-
-
 }

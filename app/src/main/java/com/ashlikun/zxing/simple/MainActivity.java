@@ -1,12 +1,16 @@
 package com.ashlikun.zxing.simple;
 
+import android.Manifest;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.TextureView;
+import android.view.View;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.ashlikun.zxing.CodeUtils;
 import com.ashlikun.zxing.OnLightChangListener;
 import com.ashlikun.zxing.Zxing;
 import com.ashlikun.zxing.ZxingCallback;
@@ -24,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements ZxingCallback, On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        requestPermissions(new String[]{Manifest.permission.CAMERA}, 111);
         textureView = findViewById(R.id.textureView);
         viewfinderView = findViewById(R.id.viewfinderView);
         imageView = findViewById(R.id.imageView);
@@ -42,6 +47,13 @@ public class MainActivity extends AppCompatActivity implements ZxingCallback, On
                 zxing.create();
             }
         }, 1000);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap bitmap = CodeUtils.createImage("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 200, 200, null);
+                imageView.setImageBitmap(bitmap);
+            }
+        });
     }
 
     @Override

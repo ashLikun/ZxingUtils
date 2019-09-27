@@ -46,7 +46,6 @@ public class CodeUtils {
          */
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true; // 先获取原大小
-        Bitmap mBitmap = BitmapFactory.decodeFile(path, options);
         options.inJustDecodeBounds = false; // 获取新的大小
 
         int sampleSize = (int) (options.outHeight / (float) 400);
@@ -55,17 +54,22 @@ public class CodeUtils {
             sampleSize = 1;
         }
         options.inSampleSize = sampleSize;
-        mBitmap = BitmapFactory.decodeFile(path, options);
+        analyzeBitmap(BitmapFactory.decodeFile(path, options), analyzeCallback);
+    }
 
+    /**
+     * 解析二维码图片工具类
+     *
+     * @param analyzeCallback
+     */
+    public static void analyzeBitmap(Bitmap mBitmap, AnalyzeCallback analyzeCallback) {
         MultiFormatReader reader = new MultiFormatReader();
-
         // 解码的参数
-        Hashtable<DecodeHintType, Object> hints = new Hashtable<DecodeHintType, Object>(2);
+        Hashtable<DecodeHintType, Object> hints = new Hashtable<>(2);
         // 可以解析的编码类型
-        Vector<BarcodeFormat> decodeFormats = new Vector<BarcodeFormat>();
+        Vector<BarcodeFormat> decodeFormats = new Vector<>();
         if (decodeFormats == null || decodeFormats.isEmpty()) {
-            decodeFormats = new Vector<BarcodeFormat>();
-
+            decodeFormats = new Vector<>();
             // 这里设置可扫描的类型，我这里选择了都支持
             decodeFormats.addAll(DecodeFormatManager.ONE_D_FORMATS);
             decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
@@ -76,7 +80,6 @@ public class CodeUtils {
         hints.put(DecodeHintType.CHARACTER_SET, "UTF8");
         // 设置解析配置参数
         reader.setHints(hints);
-
         repetDecode(reader, mBitmap, analyzeCallback);
     }
 
@@ -126,6 +129,22 @@ public class CodeUtils {
      */
     public static Bitmap createImage(String text, int w, int h, Bitmap logo) {
         return createImage(text, w, h, true, logo);
+    }
+
+    /**
+     * 生成二维码图片
+     */
+    public static Bitmap createImage(String text, int w, int h) {
+        return createImage(text, w, h, true, null);
+    }
+
+    /**
+     * 生成二维码图片
+     *
+     * @param isDeleteWhite 是否删除多余的白边
+     */
+    public static Bitmap createImage(String text, int w, int h, boolean isDeleteWhite) {
+        return createImage(text, w, h, isDeleteWhite, null);
     }
 
     /**
