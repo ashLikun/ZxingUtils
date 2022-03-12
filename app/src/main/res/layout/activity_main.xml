@@ -12,15 +12,19 @@
 
     <com.ashlikun.zxing.view.ViewfinderView
         android:id="@+id/viewfinderView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
+        app:inner_frame_line_width="0dp"
+        app:inner_scan_iscircle="true"
+        app:inner_drowFrame="true"
         app:inner_scan_image_ratio="2.2" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:visibility="gone"
         android:background="#000000" />
 
     <TextView

@@ -27,6 +27,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.ashlikun.zxing.R;
 import com.google.zxing.ResultPoint;
@@ -47,7 +48,7 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
     private static final int OPAQUE = 0xFF;
 
     private final Paint paint;
-    private final int maskColor;
+
     private final int resultPointColor;
     private Collection<ResultPoint> possibleResultPoints;
     private Collection<ResultPoint> lastPossibleResultPoints;
@@ -82,6 +83,10 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
      */
     private boolean isCircle;
     /**
+     * 是否绘制边框
+     */
+    private boolean drawFrame;
+    /**
      * 扫描框边角颜色
      */
     private int innercornercolor = 0xff118eea;
@@ -97,6 +102,10 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
      * 边框线的宽度
      */
     private int innerFrameLineWidth;
+    /**
+     * 蒙层颜色
+     */
+    private int maskColor;
 
     public ViewfinderView(Context context) {
         this(context, null);
@@ -112,7 +121,6 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
         paint = new Paint();
         Resources resources = getResources();
         displayMetrics = resources.getDisplayMetrics();
-        maskColor = resources.getColor(R.color.viewfinder_mask);
         resultPointColor = resources.getColor(R.color.viewfinder_possible_result_points);
         initInnerRect(context, attrs);
     }
@@ -127,10 +135,11 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.ViewfinderView);
         // 扫描框距离顶部
         innerMarginTop = (int) ta.getDimension(R.styleable.ViewfinderView_inner_margintop, 0);
+        maskColor = ta.getColor(R.styleable.ViewfinderView_inner_maskColor, getResources().getColor(R.color.viewfinder_mask));
         // 扫描框的宽度
-        frameWidth = (int) ta.getDimension(R.styleable.ViewfinderView_inner_width, displayMetrics.widthPixels / 2);
+        frameWidth = ta.getLayoutDimension(R.styleable.ViewfinderView_inner_width, displayMetrics.widthPixels / 2);
         // 扫描框的高度
-        frameHeight = (int) ta.getDimension(R.styleable.ViewfinderView_inner_height, displayMetrics.widthPixels / 2);
+        frameHeight = ta.getLayoutDimension(R.styleable.ViewfinderView_inner_height, displayMetrics.widthPixels / 2);
         // 扫描框边角颜色
         innercornercolor = ta.getColor(R.styleable.ViewfinderView_inner_corner_color, innercornercolor);
         // 扫描框边角长度
@@ -146,9 +155,20 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
         //扫码的zxing识别的边框在界面边框的比例
         scan_ratio = ta.getFloat(R.styleable.ViewfinderView_inner_scan_image_ratio, 1.1f);
         isCircle = ta.getBoolean(R.styleable.ViewfinderView_inner_scan_iscircle, false);
+        drawFrame = ta.getBoolean(R.styleable.ViewfinderView_inner_drowFrame, true);
         ta.recycle();
     }
 
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        if (frameWidth == ViewGroup.LayoutParams.MATCH_PARENT || frameWidth == ViewGroup.LayoutParams.WRAP_CONTENT) {
+            frameWidth = getWidth();
+        }
+        if (frameHeight == ViewGroup.LayoutParams.MATCH_PARENT || frameHeight == ViewGroup.LayoutParams.WRAP_CONTENT) {
+            frameHeight = getHeight();
+        }
+    }
 
     @Override
     public void onDraw(Canvas canvas) {
@@ -158,14 +178,13 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
         }
         int width = canvas.getWidth();
         int height = canvas.getHeight();
+        //蒙层
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(maskColor);
         canvas.drawRect(0, 0, width, frame.top, paint);
         canvas.drawRect(0, frame.top, frame.left, frame.bottom + 1, paint);
         canvas.drawRect(frame.right + 1, frame.top, width, frame.bottom + 1, paint);
         canvas.drawRect(0, frame.bottom + 1, width, height, paint);
-
-
         drawFrameBounds(canvas, frame);
 
         drawScanLight(canvas, frame);
@@ -176,7 +195,7 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
             if (currentPossible.isEmpty()) {
                 lastPossibleResultPoints = null;
             } else {
-                possibleResultPoints = new HashSet<ResultPoint>(5);
+                possibleResultPoints = new HashSet(5);
                 lastPossibleResultPoints = currentPossible;
                 paint.setAlpha(OPAQUE);
                 paint.setColor(resultPointColor);
@@ -228,7 +247,9 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
      * @param frame
      */
     private void drawFrameBounds(Canvas canvas, Rect frame) {
-
+        if (!drawFrame) {
+            return;
+        }
 
         paint.setColor(innercornercolor);
         paint.setStyle(Paint.Style.FILL);
@@ -256,11 +277,12 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
                 frame.right, frame.bottom, paint);
         canvas.drawRect(frame.right - corLength, frame.bottom - corWidth,
                 frame.right, frame.bottom, paint);
-
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(innerFrameLineWidth);
-        //边框线
-        canvas.drawRect(frame, paint);
+        if (innerFrameLineWidth > 0) {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(innerFrameLineWidth);
+            //边框线
+            canvas.drawRect(frame, paint);
+        }
     }
 
 

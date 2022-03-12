@@ -2,9 +2,14 @@
 <resources>
 
     <declare-styleable name="ViewfinderView">
-        <attr name="inner_width" format="dimension" />
-        <attr name="inner_height" format="dimension" />
+        <attr name="inner_width" format="dimension">
+            <enum name="match_parent" value="-1" />
+        </attr>
+        <attr name="inner_height" format="dimension">
+            <enum name="match_parent" value="-1" />
+        </attr>
         <attr name="inner_margintop" format="dimension" />
+        <attr name="inner_maskColor" format="dimension" />
         <attr name="inner_corner_color" format="color" />
         <attr name="inner_corner_length" format="dimension" />
         <attr name="inner_corner_width" format="dimension" />
@@ -13,6 +18,8 @@
         <!--扫描速度,就是多少ms后绘制一次默认30-->
         <attr name="inner_scan_speed" format="integer" />
         <attr name="inner_scan_iscircle" format="boolean" />
+        <!--是否绘制边框-->
+        <attr name="inner_drowFrame" format="boolean" />
         <!--   扫码的zxing识别的边框在界面边框的比例     -->
         <attr name="inner_scan_image_ratio" format="float" />
     </declare-styleable>

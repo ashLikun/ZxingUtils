@@ -40,7 +40,7 @@ dependencies {
    
    //成功后可以调用这个方法继续识别
    zxing.reStart();
-   //生命周期,一定要在activity调用
+   //生命周期,一定要在activity调用,如果context 是LifecycleOwner 那么生命周期是自动的
    zxing.onResume();
    zxing.onPause();
    zxing.onDestroy();
