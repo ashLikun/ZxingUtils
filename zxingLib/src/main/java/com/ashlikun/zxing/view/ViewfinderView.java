@@ -330,4 +330,143 @@ public final class ViewfinderView extends View implements IViewDecodeBridge {
             return null;
         }
     }
+
+    /**
+     * 获取底部的线距离顶部距离。在测量完成后才有
+     *
+     * @return
+     */
+    public int getBottomFrame() {
+        return getHeight() / 2 + frameHeight / 2;
+    }
+
+    public int getFrameWidth() {
+        return frameWidth;
+    }
+
+    public void setFrameWidth(int frameWidth) {
+        this.frameWidth = frameWidth;
+        requestLayout();
+    }
+
+    public int getFrameHeight() {
+        return frameHeight;
+    }
+
+    public void setFrameHeight(int frameHeight) {
+        this.frameHeight = frameHeight;
+        requestLayout();
+    }
+
+    public int getInnerMarginTop() {
+        return innerMarginTop;
+    }
+
+    public void setInnerMarginTop(int innerMarginTop) {
+        this.innerMarginTop = innerMarginTop;
+        requestLayout();
+    }
+
+    public boolean isDrawFrame() {
+        return drawFrame;
+    }
+
+    public void setDrawFrame(boolean drawFrame) {
+        this.drawFrame = drawFrame;
+        requestLayout();
+    }
+
+    public int getInnercornercolor() {
+        return innercornercolor;
+    }
+
+    public void setInnercornercolor(int innercornercolor) {
+        this.innercornercolor = innercornercolor;
+        requestLayout();
+    }
+
+    public int getInnercornerlength() {
+        return innercornerlength;
+    }
+
+    public void setInnercornerlength(int innercornerlength) {
+        this.innercornerlength = innercornerlength;
+        requestLayout();
+    }
+
+    public int getInnercornerwidth() {
+        return innercornerwidth;
+    }
+
+    public void setInnercornerwidth(int innercornerwidth) {
+        this.innercornerwidth = innercornerwidth;
+        requestLayout();
+    }
+
+    public int getInnerFrameLineWidth() {
+        return innerFrameLineWidth;
+    }
+
+    public void setInnerFrameLineWidth(int innerFrameLineWidth) {
+        this.innerFrameLineWidth = innerFrameLineWidth;
+        requestLayout();
+    }
+
+    public int getResultPointColor() {
+        return resultPointColor;
+    }
+
+    public int getScanLineTop() {
+        return scanLineTop;
+    }
+
+    public void setScanLineTop(int scanLineTop) {
+        this.scanLineTop = scanLineTop;
+        requestLayout();
+    }
+
+    public int getScan_velocity() {
+        return scan_velocity;
+    }
+
+    public void setScan_velocity(int scan_velocity) {
+        this.scan_velocity = scan_velocity;
+        requestLayout();
+    }
+
+    public float getScan_ratio() {
+        return scan_ratio;
+    }
+
+    public void setScan_ratio(float scan_ratio) {
+        this.scan_ratio = scan_ratio;
+        requestLayout();
+    }
+
+    public Bitmap getScanLight() {
+        return scanLight;
+    }
+
+    public void setScanLight(Bitmap scanLight) {
+        this.scanLight = scanLight;
+        requestLayout();
+    }
+
+    public boolean isCircle() {
+        return isCircle;
+    }
+
+    public void setCircle(boolean circle) {
+        isCircle = circle;
+        requestLayout();
+    }
+
+    public int getMaskColor() {
+        return maskColor;
+    }
+
+    public void setMaskColor(int maskColor) {
+        this.maskColor = maskColor;
+        requestLayout();
+    }
 }
