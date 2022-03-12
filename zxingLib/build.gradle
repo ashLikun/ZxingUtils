@@ -1,43 +1,44 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+// 使用Kotlin插件
 apply plugin: 'kotlin-android'
+apply plugin: 'com.github.dcendents.android-maven'
+// GitHub账户名
+group = 'com.github.ashLikun'
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
     defaultConfig {
-        applicationId "com.ashlikun.zxing.simple"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
-        multiDexEnabled = true
     }
     buildFeatures {
-        viewBinding = true
+        buildConfig = false
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    //java8
     compileOptions {
+        //定义生成的META-INF/library_release文件名 More than one file was found with OS independent path 'META-INF/library_release.kotlin_module'
+        kotlinOptions.freeCompilerArgs += ['-module-name', 'com.ashlikun.zxing']
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "1.8"
     }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation rootProject.ext.designVersion
-    implementation "androidx.core:core:1.6.+"
-    implementation project(':zxingLib')
-    implementation "androidx.constraintlayout:constraintlayout:+"
-    implementation 'com.google.zxing:core:3.3.0'
+    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly rootProject.ext.designVersion
+    compileOnly 'com.google.zxing:core:3.3.0'
 }
-repositories {
-    mavenCentral()
-}
+apply from: '../maven.gradle'
