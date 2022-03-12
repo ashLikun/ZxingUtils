@@ -39,6 +39,6 @@ android {
 dependencies {
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])
     compileOnly rootProject.ext.designVersion
-    compileOnly 'com.google.zxing:core:3.3.0'
+    compileOnly 'com.google.zxing:core:3.4.1'
 }
 apply from: '../maven.gradle'

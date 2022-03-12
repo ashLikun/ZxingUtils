@@ -36,7 +36,7 @@ dependencies {
     implementation "androidx.core:core:1.6.+"
     implementation project(':zxingLib')
     implementation "androidx.constraintlayout:constraintlayout:+"
-    implementation 'com.google.zxing:core:3.3.0'
+    implementation 'com.google.zxing:core:3.4.1'
 }
 repositories {
     mavenCentral()
