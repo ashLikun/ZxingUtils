@@ -20,6 +20,7 @@ import android.graphics.Point;
 import android.hardware.Camera;
 import android.util.Log;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 
@@ -56,7 +57,24 @@ final class CameraConfigurationManager {
         Camera.Parameters parameters = camera.getParameters();
         previewFormat = parameters.getPreviewFormat();
         previewFormatString = parameters.get("preview-format");
+        setAutoFocusInternal(parameters);
         cameraResolution = getCameraResolution(parameters, width, height);
+    }
+
+    /**
+     *
+     */
+    private void setAutoFocusInternal(Camera.Parameters parameters) {
+        final List<String> modes = parameters.getSupportedFocusModes();
+        if (modes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+        } else if (modes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+        } else if (modes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        } else {
+            parameters.setFocusMode(modes.get(0));
+        }
     }
 
     /**
@@ -123,7 +141,7 @@ final class CameraConfigurationManager {
     private static Point findBestPreviewSizeValue(CharSequence previewSizeValueString, Point screenResolution) {
         int bestX = 0;
         int bestY = 0;
-        int diff = Integer.MAX_VALUE;
+        float diff = Integer.MAX_VALUE;
         for (String previewSize : COMMA_PATTERN.split(previewSizeValueString)) {
 
             previewSize = previewSize.trim();
@@ -143,7 +161,9 @@ final class CameraConfigurationManager {
                 continue;
             }
 
-            int newDiff = Math.abs(newX - screenResolution.x) + Math.abs(newY - screenResolution.y);
+//            int newDiff = Math.abs(newX - screenResolution.x) + Math.abs(newY - screenResolution.y);
+            //解决相机拉伸变形问题
+            float newDiff = Math.abs((float) newX / newY - (float) screenResolution.x / screenResolution.y);
             if (newDiff == 0) {
                 bestX = newX;
                 bestY = newY;
