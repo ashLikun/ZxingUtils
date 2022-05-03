@@ -1,40 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextureView
-        android:id="@+id/textureView"
+    <com.ashlikun.zxing.simple.CusScanView
+        android:id="@+id/zxingview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center" />
+        android:layout_height="match_parent" />
 
-    <com.ashlikun.zxing.view.ViewfinderView
-        android:id="@+id/viewfinderView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        app:inner_frame_line_width="0dp"
-        app:inner_scan_iscircle="true"
-        app:inner_drowFrame="true"
-        app:inner_scan_image_ratio="2.2" />
+    <include layout="@layout/tool_title" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:visibility="gone"
-        android:background="#000000" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="150dp"
-        android:gravity="center"
-        android:text="请对准二维码"
-        android:textColor="#ffffff"
-        android:textSize="14dp" />
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:onClick="change"
+        android:visibility="gone" />
 
 </FrameLayout>

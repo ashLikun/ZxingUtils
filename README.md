@@ -22,7 +22,7 @@ dependencies {
     com.google.zxing:core:3.3.0
 }
 ```
-
+https://github.com/ailiwean/NBZxing.wiki.git
 ## 详细介绍
 
 * ### 自动扫码
