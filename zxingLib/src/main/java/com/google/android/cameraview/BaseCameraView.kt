@@ -15,18 +15,17 @@ import com.ashlikun.zxing.Utils
 import com.ashlikun.zxing.helper.ZoomHelper
 
 /**
- * @Package:        com.google.android.cameraview
- * @ClassName:      BaseCameraView
- * @Description:
- * @Author:         SWY
- * @CreateDate:     2020/4/19 12:02 AM
+ * @author　　: 李坤
+ * 创建时间: 2022/5/4 1:43
+ * 邮箱　　：496546144@qq.com
+ *
+ * 功能介绍：
  */
 abstract class BaseCameraView @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     def: Int = 0
-) :
-    CameraView(context, attributeSet, def), DefaultLifecycleObserver {
+) : CameraView(context, attributeSet, def), DefaultLifecycleObserver {
 
     //保证避免多次调用start()
     private var isShoudCreateOpen = true

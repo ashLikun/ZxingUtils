@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.os.Build
 import com.ashlikun.zxing.Utils
+import com.ashlikun.zxing.core.BitmapLuminanceSource
+import com.ashlikun.zxing.core.CustomMultiFormatReader
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.Result
 import com.google.zxing.common.GlobalHistogramBinarizer
@@ -17,9 +19,9 @@ import java.io.File
  * 创建时间: 2022/5/2 20:50
  * 邮箱　　：496546144@qq.com
  *
- * 功能介绍：
+ * 功能介绍：解析指定的图片
  */
-object ImgparseHelper {
+object ImgParseHelper {
 
     fun parseFile(filePath: String): Result? {
         val file = File(filePath)
@@ -47,11 +49,11 @@ object ImgparseHelper {
     fun parseBitmap(bitmap: Bitmap?): Result? {
         if (bitmap == null)
             return null
-        val source = com.ashlikun.zxing.zxing.BitmapLuminanceSource(bitmap)
-        return com.ashlikun.zxing.zxing.CustomMultiFormatReader.getInstance()
-                .decode(BinaryBitmap(GlobalHistogramBinarizer(source)))
-                ?: com.ashlikun.zxing.zxing.CustomMultiFormatReader.getInstance()
-                        .decode(BinaryBitmap(HybridBinarizer(source)))
+        val source = BitmapLuminanceSource(bitmap)
+        return CustomMultiFormatReader.getInstance()
+            .decode(BinaryBitmap(GlobalHistogramBinarizer(source)))
+            ?: CustomMultiFormatReader.getInstance()
+                .decode(BinaryBitmap(HybridBinarizer(source)))
     }
 
 }

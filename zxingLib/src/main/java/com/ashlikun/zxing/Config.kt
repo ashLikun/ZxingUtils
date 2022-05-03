@@ -2,8 +2,8 @@ package com.ashlikun.zxing
 
 import com.ashlikun.zxing.core.Config
 import com.ashlikun.zxing.core.GrayScaleDispatch
-import com.ashlikun.zxing.zxing.ScanRect
-import com.ashlikun.zxing.zxing.ScanTypeConfig
+import com.ashlikun.zxing.core.ScanRect
+import com.ashlikun.zxing.core.ScanTypeConfig
 
 /**
  * @author　　: 李坤

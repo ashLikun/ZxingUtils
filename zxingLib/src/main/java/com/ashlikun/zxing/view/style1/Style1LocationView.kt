@@ -18,7 +18,7 @@ import com.ashlikun.zxing.view.ScanLocViewCallBack
  * 功能介绍：扫描的自定义定位点
  */
 
-class LocationView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, def: Int = 0) :
+class Style1LocationView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, def: Int = 0) :
     AppCompatImageView(context, attributeSet, def), ScanLocViewCallBack {
 
     override fun cameraStartLaterInit() {

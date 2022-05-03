@@ -1,4 +1,4 @@
-package com.ashlikun.zxing.view.style2
+package com.ashlikun.zxing.view.style1
 
 import android.content.Context
 import android.util.AttributeSet
@@ -9,18 +9,17 @@ import com.ashlikun.zxing.view.FreeZxingView
 import com.ashlikun.zxing.view.ScanBarCallBack
 import com.ashlikun.zxing.view.ScanLightViewCallBack
 import com.ashlikun.zxing.view.ScanLocViewCallBack
-import com.ashlikun.zxing.view.style1.ScanLightView
 
 /**
  * @author　　: 李坤
- * 创建时间: 2022/5/2 22:54
+ * 创建时间: 2022/5/2 21:00
  * 邮箱　　：496546144@qq.com
  *
- * 功能介绍：第二种样式扫描控件
+ * 功能介绍：第一种样式扫描控件
  */
-
-open class NBZxingView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, def: Int = 0) :
+open class ZxingStyle1View @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, def: Int = 0) :
     FreeZxingView(context, attributeSet, def) {
+
     val scanRectView by lazy {
         findViewById<View>(R.id.scanRectView)
     }
@@ -29,20 +28,23 @@ open class NBZxingView @JvmOverloads constructor(context: Context, attributeSet:
     }
 
     val locView by lazy {
-        findViewById<LocationView>(R.id.locView)
+        findViewById<Style1LocationView>(R.id.locView)
     }
+
+    val scanBarView by lazy {
+        findViewById<ScanBarView>(R.id.scanBarView)
+    }
+
 
     override fun resultBack(content: Result) {
 
     }
 
     override fun provideFloorView(): Int {
-        return R.layout.xzxing_style2_floorview
+        return R.layout.xzxing_style1_floorview
     }
 
-    override fun provideParseRectView(): View? {
-        return scanRectView
-    }
+    override fun provideParseRectView() = scanRectView
 
     override fun provideLightView(): ScanLightViewCallBack? {
         return lightView
@@ -53,7 +55,7 @@ open class NBZxingView @JvmOverloads constructor(context: Context, attributeSet:
     }
 
     override fun provideScanBarView(): ScanBarCallBack? {
-        return null
+        return scanBarView
     }
 
 }

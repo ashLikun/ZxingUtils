@@ -1,4 +1,4 @@
-package com.ashlikun.zxing.view;
+package com.ashlikun.zxing.view
 
 /**
  * @author　　: 李坤
@@ -7,16 +7,13 @@ package com.ashlikun.zxing.view;
  *
  * 功能介绍：自定义手电筒
  */
-
-public interface ScanLightViewCallBack extends CameraStarLater {
-
+interface ScanLightViewCallBack : CameraStarLater {
     //光线变亮
-    void lightBrighter();
+    fun lightBrighter()
 
     //光线变暗
-    void lightDark();
+    fun lightDark()
 
     //闪光灯打开关闭
-    void regLightOperator(Runnable open, Runnable close);
-
+    fun regLightOperator(open: Runnable, close: Runnable)
 }

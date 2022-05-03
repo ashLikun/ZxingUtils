@@ -1,0 +1,13 @@
+package com.ashlikun.zxing.view
+
+/**
+ * @author　　: 李坤
+ * 创建时间: 2022/5/2 20:59
+ * 邮箱　　：496546144@qq.com
+ *
+ * 功能介绍：自定义扫描条
+ */
+interface ScanBarCallBack : CameraStarLater {
+    fun startScanAnimator()
+    fun stopScanAnimator()
+}

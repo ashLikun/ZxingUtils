@@ -15,7 +15,9 @@ import com.ashlikun.zxing.Config
 import com.ashlikun.zxing.R
 import com.ashlikun.zxing.Result
 import com.ashlikun.zxing.able.AbleManager
-import com.ashlikun.zxing.helper.ImgparseHelper
+import com.ashlikun.zxing.helper.ImgParseHelper
+import com.ashlikun.zxing.core.ScanTypeConfig
+import com.ashlikun.zxing.helper.VibrateHelper
 import com.google.android.cameraview.AspectRatio
 import com.google.android.cameraview.BaseCameraView
 import com.google.android.cameraview.CameraView
@@ -26,9 +28,31 @@ import java.lang.ref.WeakReference
  * 创建时间: 2022/5/2 23:20
  * 邮箱　　：496546144@qq.com
  *
- * 功能介绍：
+ * 功能介绍：ZXing 扫码的基础view
  */
 typealias OnResult = (Result) -> Unit
+
+interface FreeInterface {
+    /***
+     * 提供一个扫码区域View, 将根据这个View剪裁数据
+     */
+    fun provideParseRectView(): View?
+
+    /***
+     * 提供一个扫描条View, 需实现[ScanBarCallBack]
+     */
+    fun provideScanBarView(): ScanBarCallBack?
+
+    /***
+     * 提供一个手电筒View,需实现[ScanLightViewCallBack]
+     */
+    fun provideLightView(): ScanLightViewCallBack?
+
+    /***
+     * 提供一个定位点View, 需实现[ScanLocViewCallBack]
+     */
+    fun provideLocView(): ScanLocViewCallBack?
+}
 
 abstract class FreeZxingView @JvmOverloads constructor(
     context: Context,
@@ -170,10 +194,10 @@ abstract class FreeZxingView @JvmOverloads constructor(
         scanBarView?.stopScanAnimator()
 
         //播放音频
-        com.ashlikun.zxing.helper.VibrateHelper.playVibrate()
+        VibrateHelper.playVibrate()
 
         //震动
-        com.ashlikun.zxing.helper.VibrateHelper.playBeep()
+        VibrateHelper.playBeep()
 
     }
 
@@ -293,7 +317,7 @@ abstract class FreeZxingView @JvmOverloads constructor(
 
         busHandle.removeCallbacksAndMessages(null)
         busHandle.post {
-            onParseResult(ImgparseHelper.parseFile(filePath))
+            onParseResult(ImgParseHelper.parseFile(filePath))
         }
     }
 
@@ -307,7 +331,7 @@ abstract class FreeZxingView @JvmOverloads constructor(
 
         busHandle.removeCallbacksAndMessages(null)
         busHandle.post {
-            onParseResult(ImgparseHelper.parseBitmap(bitmap))
+            onParseResult(ImgParseHelper.parseBitmap(bitmap))
         }
     }
 
@@ -329,8 +353,8 @@ abstract class FreeZxingView @JvmOverloads constructor(
     /***
      * 提供扫码类型
      */
-    open fun configScanType(): com.ashlikun.zxing.zxing.ScanTypeConfig {
-        return com.ashlikun.zxing.zxing.ScanTypeConfig.HIGH_FREQUENCY
+    open fun configScanType(): ScanTypeConfig {
+        return ScanTypeConfig.HIGH_FREQUENCY
     }
 
     /***

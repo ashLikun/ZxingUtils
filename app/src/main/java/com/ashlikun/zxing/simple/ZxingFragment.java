@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.ashlikun.zxing.Result;
-import com.ashlikun.zxing.view.style1.NBZxingView;
+import com.ashlikun.zxing.view.style1.ZxingStyle1View;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,12 +25,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class ZxingFragment extends Fragment {
 
-    private NBZxingView nBZxingView;
+    private ZxingStyle1View nBZxingView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        nBZxingView = new NBZxingView(container.getContext()) {
+        nBZxingView = new ZxingStyle1View(container.getContext()) {
             @Override
             public void resultBack(@NotNull Result content) {
                 Toast.makeText(getContext(), content.getText(), Toast.LENGTH_LONG).show();

@@ -1,4 +1,4 @@
-package com.ashlikun.zxing.zxing;
+package com.ashlikun.zxing.core;
 
 import com.ashlikun.zxing.Config;
 import com.google.zxing.BarcodeFormat;

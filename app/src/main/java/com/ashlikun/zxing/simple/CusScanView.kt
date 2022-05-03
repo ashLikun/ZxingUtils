@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.Toast
 import com.ashlikun.zxing.Result
-import com.ashlikun.zxing.view.style1.NBZxingView
-import com.ashlikun.zxing.zxing.ScanTypeConfig
+import com.ashlikun.zxing.view.style1.ZxingStyle1View
+import com.ashlikun.zxing.core.ScanTypeConfig
 import com.google.android.cameraview.AspectRatio
 
 
@@ -18,7 +18,7 @@ import com.google.android.cameraview.AspectRatio
  */
 
 class CusScanView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, def: Int = 0) :
-    NBZxingView(context, attributeSet, def) {
+    ZxingStyle1View(context, attributeSet, def) {
 
     override fun resultBack(content: Result) {
         Toast.makeText(context, content.text, Toast.LENGTH_LONG).show()

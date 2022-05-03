@@ -1,4 +1,4 @@
-package com.ashlikun.zxing.zxing;
+package com.ashlikun.zxing.core;
 
 import android.graphics.Bitmap;
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.ashlikun.zxing.view.style1.LocationView
+    <com.ashlikun.zxing.view.style1.Style1LocationView
         android:id="@+id/locView"
         android:layout_width="45dp"
         android:layout_height="45dp"

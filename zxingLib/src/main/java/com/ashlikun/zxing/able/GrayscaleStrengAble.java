@@ -5,7 +5,7 @@ import android.os.Handler;
 
 import com.ashlikun.zxing.Config;
 import com.ashlikun.zxing.helper.ScanHelper;
-import com.ashlikun.zxing.zxing.LightGreySource;
+import com.ashlikun.zxing.core.LightGreySource;
 import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;

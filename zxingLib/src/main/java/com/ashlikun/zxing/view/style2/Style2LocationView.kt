@@ -19,7 +19,7 @@ import com.ashlikun.zxing.view.ScanLocViewCallBack
  * 功能介绍：扫描的自定义定位点
  */
 
-class LocationView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, def: Int = 0) :
+class Style2LocationView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, def: Int = 0) :
     androidx.appcompat.widget.AppCompatImageView(context, attributeSet, def), ScanLocViewCallBack {
 
     private var animator: ObjectAnimator? = null
@@ -38,9 +38,9 @@ class LocationView @JvmOverloads constructor(context: Context, attributeSet: Att
         animator?.start()
     }
 
-    override fun toLocation(result: Result?, runnable: Runnable?) {
+    override fun toLocation(result: Result, runnable: Runnable) {
         var params = layoutParams
-        result?.let {
+        result.let {
             translationX = it.qrPointF.x - it.qrLeng * 1f
             translationY = it.qrPointF.y - it.qrLeng * 1f
             rotation = it.qrRotate

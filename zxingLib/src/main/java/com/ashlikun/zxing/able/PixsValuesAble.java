@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.ashlikun.zxing.TypeRunnable;
-import com.ashlikun.zxing.zxing.CustomMultiFormatReader;
+import com.ashlikun.zxing.core.CustomMultiFormatReader;
 import com.google.zxing.Binarizer;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.PlanarYUVLuminanceSource;

@@ -2,7 +2,12 @@
 
 # **ZxingUtils**
 项目简介
-    封装zxing扫码的实现,只负责解码，控制权完全交于开发者
+- 基于google-cameraView调整优化，大量机型测试，可稳定流畅启动关闭相机
+- Camera2-Camera1分别实现扫码, 高版本默认走Camera2， 低版本Camera1， Camera2启动失败走Camera1
+- 灰度算法处理， 可应付一些特殊场景二维码并可拓展
+- 自定义探测器支持非白边等异形二维码识别
+- zxing源码修改，彻底解决复杂二维码扫出一堆不相干数字问题
+- 可能是目前最完善的扫码横竖屏切换，可配置不同布局，可动态切换
 ## 使用方法
 
 build.gradle文件中添加:
@@ -26,38 +31,6 @@ https://github.com/ailiwean/NBZxing.wiki.git
 ## 详细介绍
 
 * ### 自动扫码
-```java
-   Zxing zxing  = new Zxing(textureView,//渲染的view
-                             this, //事件回调
-                             null, //解码格式，可以null
-                             null, //字符编码，可以null
-                             viewfinderView// 解码器与view的交互);
-   //监听亮度改变,不为null内部就会解析图片的亮度
-   zxing.setLightChangListener(this);
-   //开启解码成功的音效
-   zxing.setPlayBeep(true);
-   zxing.create();
-   
-   //成功后可以调用这个方法继续识别
-   zxing.reStart();
-   //生命周期,一定要在activity调用,如果context 是LifecycleOwner 那么生命周期是自动的
-   zxing.onResume();
-   zxing.onPause();
-   zxing.onDestroy();
-```
-
+https://github.com/ailiwean/NBZxing/wiki
 * ### 选择图片并解析
-```java
-    CodeUtils.analyzeBitmap(uri, new CodeUtils.AnalyzeCallback() {
-            @Override
-            public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-                Toast.makeText(MainActivity.this, "解析结果:" + result, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onAnalyzeFailed() {
-                Toast.makeText(MainActivity.this, "解析二维码失败", Toast.LENGTH_LONG).show();
-            }
-        });
-```
 
