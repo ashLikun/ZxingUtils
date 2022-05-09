@@ -51,6 +51,6 @@ dependencies {
 //    compileOnly 'com.google.zxing:core:3.4.1'
     //若需要使用灰度算法增强库，再次添加以下依赖(纯java超轻量，两个同时依赖,包体积只增大约400kb,混淆后仅200k)
     api project(':zxingGrayScaleLib')
-    compileOnly project(':zxingCore')
+    api project(':zxingCore')
 }
 apply from: '../maven.gradle'
