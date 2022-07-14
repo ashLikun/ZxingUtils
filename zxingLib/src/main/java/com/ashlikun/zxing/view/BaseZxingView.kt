@@ -287,9 +287,9 @@ abstract class FreeZxingView @JvmOverloads constructor(
      */
     protected open fun resultBackFile(content: Result?) {
         if (content != null) {
-            onFileResult?.invoke(content)
+            (onFileResult ?: onResult)?.invoke(content)
         } else {
-            onFileResult?.invoke(Result())
+            (onFileResult ?: onResult)?.invoke(Result())
         }
     }
 
