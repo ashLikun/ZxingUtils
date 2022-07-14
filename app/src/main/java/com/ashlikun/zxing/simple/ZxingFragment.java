@@ -34,7 +34,7 @@ public class ZxingFragment extends Fragment {
             @Override
             public void resultBack(@NotNull Result content) {
                 Toast.makeText(getContext(), content.getText(), Toast.LENGTH_LONG).show();
-//                nBZxingView.onCameraResume();
+                nBZxingView.onCameraResume();
             }
         };
         return nBZxingView;

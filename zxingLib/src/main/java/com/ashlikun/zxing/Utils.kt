@@ -29,7 +29,7 @@ import java.lang.ref.WeakReference
  * Google 的 Result 转成自己的
  */
 inline fun Result.toResult() = Result().also {
-    it.text = text
+    it.text = text.orEmpty()
     val pointFS = ScanHelper.rotatePointR(resultPoints)
     it.qrPointF = ScanHelper.calCenterPointF(pointFS)
     it.qrLeng = ScanHelper.calQrLenghtShow(resultPoints)

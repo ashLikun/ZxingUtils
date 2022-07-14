@@ -94,7 +94,8 @@ abstract class FreeZxingView @JvmOverloads constructor(
     /***
      * 自定义定位点
      */
-    private val locView: ScanLocViewCallBack? get() = provideLocView()
+    private val locView: ScanLocViewCallBack?
+        get() = provideLocView()
 
     /***
      * 自定义解析区域

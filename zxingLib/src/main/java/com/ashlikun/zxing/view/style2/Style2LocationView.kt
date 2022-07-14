@@ -29,6 +29,7 @@ class Style2LocationView @JvmOverloads constructor(context: Context, attributeSe
     }
 
     fun startAnim() {
+        animator?.cancel()
         val scaleYProper = PropertyValuesHolder.ofFloat("scaleY", 1f, 0.8f, 1f)
         val scaleXProper = PropertyValuesHolder.ofFloat("scaleX", 1f, 0.8f, 1f)
         animator = ObjectAnimator.ofPropertyValuesHolder(this, scaleYProper, scaleXProper)
@@ -54,6 +55,11 @@ class Style2LocationView @JvmOverloads constructor(context: Context, attributeSe
             layoutParams = params
         }
         runnable?.run()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        startAnim()
     }
 
     override fun onDetachedFromWindow() {

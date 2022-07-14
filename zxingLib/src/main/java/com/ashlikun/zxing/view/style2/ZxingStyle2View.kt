@@ -21,16 +21,12 @@ import com.ashlikun.zxing.view.style1.ScanLightView
 
 open class ZxingStyle2View @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, def: Int = 0) :
     FreeZxingView(context, attributeSet, def) {
-    val scanRectView by lazy {
-        findViewById<View>(R.id.scanRectView)
-    }
-    val lightView by lazy {
-        findViewById<ScanLightView>(R.id.lightView)
-    }
-
-    val locView by lazy {
-        findViewById<Style2LocationView>(R.id.locView)
-    }
+    val scanRectView
+        get() = findViewById<View>(R.id.scanRectView)
+    val lightView
+        get() = findViewById<ScanLightView>(R.id.lightView)
+    val locView
+        get() = findViewById<Style2LocationView>(R.id.locView)
 
     override fun resultBack(content: Result) {
 

@@ -23,20 +23,16 @@ import com.google.android.cameraview.AspectRatio
 open class ZxingStyle1View @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, def: Int = 0) :
     FreeZxingView(context, attributeSet, def) {
 
-    val scanRectView by lazy {
-        findViewById<View>(R.id.scanRectView)
-    }
-    val lightView by lazy {
-        findViewById<ScanLightView>(R.id.lightView)
-    }
+    val scanRectView
+        get() = findViewById<View>(R.id.scanRectView)
+    val lightView
+        get() = findViewById<ScanLightView>(R.id.lightView)
 
-    val locView by lazy {
-        findViewById<Style1LocationView>(R.id.locView)
-    }
+    val locView
+        get() = findViewById<Style1LocationView>(R.id.locView)
 
-    val scanBarView by lazy {
-        findViewById<ScanBarView>(R.id.scanBarView)
-    }
+    val scanBarView
+        get() = findViewById<ScanBarView>(R.id.scanBarView)
 
 
     override fun resultBack(content: Result) {
