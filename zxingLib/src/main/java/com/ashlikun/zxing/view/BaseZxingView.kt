@@ -15,8 +15,8 @@ import com.ashlikun.zxing.Config
 import com.ashlikun.zxing.R
 import com.ashlikun.zxing.Result
 import com.ashlikun.zxing.able.AbleManager
-import com.ashlikun.zxing.helper.ImgParseHelper
 import com.ashlikun.zxing.core.ScanTypeConfig
+import com.ashlikun.zxing.helper.QRCodeHelper
 import com.ashlikun.zxing.helper.VibrateHelper
 import com.google.android.cameraview.AspectRatio
 import com.google.android.cameraview.BaseCameraView
@@ -66,6 +66,11 @@ abstract class FreeZxingView @JvmOverloads constructor(
      * 结果回调
      */
     var onResult: OnResult? = null
+
+    /**
+     * 文件识别回调
+     */
+    var onFileResult: OnResult? = null
 
     init {
         //使用后置相机
@@ -182,7 +187,7 @@ abstract class FreeZxingView @JvmOverloads constructor(
     /***
      * 扫码成功后的一些动作
      */
-    private fun scanSucHelper() {
+    protected fun scanSucHelper() {
 
         //关闭相机
         onCameraPause()
@@ -267,7 +272,7 @@ abstract class FreeZxingView @JvmOverloads constructor(
         //重新接收数据
         busHandle.enable(true)
         //音频资源加载
-        com.ashlikun.zxing.helper.VibrateHelper.playInit()
+        VibrateHelper.playInit()
     }
 
     /***
@@ -279,7 +284,13 @@ abstract class FreeZxingView @JvmOverloads constructor(
      * 图片文件扫码
      * 扫码失败返回null，详见{ @link #parseBitmap}
      */
-    protected open fun resultBackFile(content: com.google.zxing.Result?) {}
+    protected open fun resultBackFile(content: Result?) {
+        if (content != null) {
+            onFileResult?.invoke(content)
+        } else {
+            onFileResult?.invoke(Result())
+        }
+    }
 
     /***
      * 启动相机后的操作
@@ -311,13 +322,13 @@ abstract class FreeZxingView @JvmOverloads constructor(
     /***
      * 解析File， 目前默认大小压缩一半并转换ARGB_8888
      */
-    protected fun parseFile(filePath: String) {
+    open fun parseFile(filePath: String) {
 
         proscribeCamera()
 
         busHandle.removeCallbacksAndMessages(null)
         busHandle.post {
-            onParseResult(ImgParseHelper.parseFile(filePath))
+            onParseResult(QRCodeHelper.syncDecodeFile(filePath))
         }
     }
 
@@ -325,17 +336,17 @@ abstract class FreeZxingView @JvmOverloads constructor(
      * 解析Bitmap
      * 解析过程中会关闭相机， 解析失败重新启动
      */
-    protected fun parseBitmap(bitmap: Bitmap?) {
+    open fun parseBitmap(bitmap: Bitmap?) {
 
         proscribeCamera()
 
         busHandle.removeCallbacksAndMessages(null)
         busHandle.post {
-            onParseResult(ImgParseHelper.parseBitmap(bitmap))
+            onParseResult(QRCodeHelper.syncDecodeBitmap(bitmap))
         }
     }
 
-    private fun onParseResult(result: com.google.zxing.Result?) {
+    private fun onParseResult(result: Result?) {
 
         if (result != null && !result.text.isNullOrEmpty()) {
             mainHand.post {

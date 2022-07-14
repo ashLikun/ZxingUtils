@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  * @author　　: 李坤
  * 创建时间: 2022/5/3 14:51
  * 邮箱　　：496546144@qq.com
- *
+ * <p>
  * 功能介绍：
  */
 
@@ -34,6 +34,7 @@ public class ZxingFragment extends Fragment {
             @Override
             public void resultBack(@NotNull Result content) {
                 Toast.makeText(getContext(), content.getText(), Toast.LENGTH_LONG).show();
+//                nBZxingView.onCameraResume();
             }
         };
         return nBZxingView;

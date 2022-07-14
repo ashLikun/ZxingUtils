@@ -27,7 +27,7 @@ class Style1LocationView @JvmOverloads constructor(context: Context, attributeSe
     }
 
     override fun toLocation(result: Result, run: Runnable) {
-        var qrPoint = result.qrPointF
+        var qrPoint = result.qrPointF ?: return
         visibility = View.VISIBLE
         translationX = (qrPoint.x - layoutParams.width / 2)
         translationY = (qrPoint.y - layoutParams.height / 2)

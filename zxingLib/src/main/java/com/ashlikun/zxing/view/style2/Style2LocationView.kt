@@ -40,9 +40,13 @@ class Style2LocationView @JvmOverloads constructor(context: Context, attributeSe
 
     override fun toLocation(result: Result, runnable: Runnable) {
         var params = layoutParams
+        result.qrPointF ?: return
         result.let {
-            translationX = it.qrPointF.x - it.qrLeng * 1f
-            translationY = it.qrPointF.y - it.qrLeng * 1f
+            it.qrPointF?.also { p ->
+                translationX = p.x - it.qrLeng * 1f
+                translationY = p.y - it.qrLeng * 1f
+            }
+
             rotation = it.qrRotate
             params.width = (it.qrLeng * 2f).toInt()
             params.height = (it.qrLeng * 2f).toInt()

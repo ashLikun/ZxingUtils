@@ -36,7 +36,7 @@ class CusScanView @JvmOverloads constructor(context: Context, attributeSet: Attr
         return ScanTypeConfig.HIGH_FREQUENCY
     }
 
-    fun toParse(string: String) {
+    override fun toParse(string: String) {
         parseFile(string)
     }
 
@@ -44,13 +44,12 @@ class CusScanView @JvmOverloads constructor(context: Context, attributeSet: Attr
         return AspectRatio.of(16, 9)
     }
 
-    override fun resultBackFile(content: com.google.zxing.Result?) {
+    override fun resultBackFile(content: Result?) {
         super.resultBackFile(content)
         if (content == null)
             Toast.makeText(context, "未扫描到内容", Toast.LENGTH_SHORT).show()
         else Toast.makeText(context, content.text, Toast.LENGTH_SHORT).show()
     }
-
 
 
     /***

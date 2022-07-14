@@ -47,7 +47,7 @@ class CusScanView2 @JvmOverloads constructor(
         return AspectRatio.of(16, 9)
     }
 
-    override fun resultBackFile(content: com.google.zxing.Result?) {
+    override fun resultBackFile(content: Result?) {
         if (content == null)
             Toast.makeText(context, "未扫描到内容", Toast.LENGTH_SHORT).show()
         else Toast.makeText(context, content.text, Toast.LENGTH_SHORT).show()

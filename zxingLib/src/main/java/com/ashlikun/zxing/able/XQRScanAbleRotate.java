@@ -13,7 +13,7 @@ import com.google.zxing.common.HybridBinarizer;
  * @author　　: 李坤
  * 创建时间: 2022/5/2 20:49
  * 邮箱　　：496546144@qq.com
- *
+ * <p>
  * 功能介绍：
  */
 public class XQRScanAbleRotate extends PixsValuesAble {
@@ -48,12 +48,15 @@ public class XQRScanAbleRotate extends PixsValuesAble {
 
     protected com.ashlikun.zxing.Result covertResultRotate(Result result) {
         com.ashlikun.zxing.Result result_ = new com.ashlikun.zxing.Result();
-        result_.setText(result.getText());
+        if (result.getText() != null) {
+            result_.setText(result.getText());
+        }
         PointF[] pointFS = ScanHelper.rotatePointR(result.getResultPoints());
         result_.setQrPointF(ScanHelper.calCenterPointF(pointFS));
         result_.setQrLeng(ScanHelper.calQrLenghtShow(result.getResultPoints()));
         result_.setFormat(result.getBarcodeFormat());
         result_.setQrRotate(ScanHelper.calQrRotate(pointFS));
+        result_.setResult(result);
         result_.setRotate(true);
         return result_;
     }

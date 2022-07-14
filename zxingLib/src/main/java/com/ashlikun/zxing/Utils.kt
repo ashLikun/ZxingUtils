@@ -10,6 +10,8 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.TypedValue
+import com.ashlikun.zxing.helper.ScanHelper
+import com.google.zxing.Result
 import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -23,6 +25,18 @@ import java.lang.ref.WeakReference
  *
  * 功能介绍：
  */
+/**
+ * Google 的 Result 转成自己的
+ */
+inline fun Result.toResult() = Result().also {
+    it.text = text
+    val pointFS = ScanHelper.rotatePointR(resultPoints)
+    it.qrPointF = ScanHelper.calCenterPointF(pointFS)
+    it.qrLeng = ScanHelper.calQrLenghtShow(resultPoints)
+    it.format = barcodeFormat
+    it.qrRotate = ScanHelper.calQrRotate(pointFS)
+    it.result = this
+}
 
 object Utils {
 
@@ -64,10 +78,10 @@ object Utils {
     fun checkPermissionRW(context: Context): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             context.checkSelfPermission(
-                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
 
             context.checkSelfPermission(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
 
         } else {
             return true
@@ -77,8 +91,8 @@ object Utils {
     fun requstPermission(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             (context as? Activity)?.requestPermissions(arrayOf(Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
             ), 200)
         }
     }
@@ -86,7 +100,7 @@ object Utils {
     fun checkPermissionCamera(context: Context): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             context.checkSelfPermission(
-                    Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
         } else {
             return true
         }
@@ -98,14 +112,14 @@ object Utils {
     fun getMediaUriFromPath(context: Context, path: String): Uri {
         val mediaUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val cursor: Cursor? = context.contentResolver.query(mediaUri,
-                null,
-                MediaStore.Images.Media.DISPLAY_NAME + "= ?", arrayOf(path.substring(path.lastIndexOf("/") + 1)),
-                null)
+            null,
+            MediaStore.Images.Media.DISPLAY_NAME + "= ?", arrayOf(path.substring(path.lastIndexOf("/") + 1)),
+            null)
         var uri: Uri? = null
         cursor?.let {
             it.moveToFirst()
             uri = ContentUris.withAppendedId(mediaUri,
-                    it.getLong(it.getColumnIndex(MediaStore.Images.Media._ID)))
+                it.getLong(it.getColumnIndex(MediaStore.Images.Media._ID)))
         }
         cursor?.close()
         return uri ?: Uri.EMPTY
