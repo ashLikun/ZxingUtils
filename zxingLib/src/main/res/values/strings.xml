@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="xzxing_light_open">轻触照亮</string>
+    <string name="xzxing_light_off">轻触关闭</string>
+</resources>

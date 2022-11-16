@@ -15,7 +15,7 @@ import com.ashlikun.zxing.view.ScanLightViewCallBack;
  * @author　　: 李坤
  * 创建时间: 2022/5/2 21:03
  * 邮箱　　：496546144@qq.com
- *
+ * <p>
  * 功能介绍：
  */
 public class ScanLightView extends FrameLayout implements ScanLightViewCallBack {
@@ -27,6 +27,10 @@ public class ScanLightView extends FrameLayout implements ScanLightViewCallBack 
 
     Runnable open;
     Runnable close;
+    //轻触照亮
+    public String lightTextOpen;
+    //轻触关闭
+    public String lightTextOff;
 
     public ScanLightView(Context context) {
         super(context);
@@ -44,6 +48,8 @@ public class ScanLightView extends FrameLayout implements ScanLightViewCallBack 
     }
 
     private void initView() {
+        lightTextOpen = getContext().getString(R.string.xzxing_light_open);
+        lightTextOff = getContext().getString(R.string.xzxing_light_off);
         View v = LayoutInflater.from(getContext()).inflate(R.layout.xzxing_light_layout, null);
         iv = v.findViewById(R.id.light_img);
         tv = v.findViewById(R.id.light_text);
@@ -53,7 +59,7 @@ public class ScanLightView extends FrameLayout implements ScanLightViewCallBack 
     }
 
     public void toggle() {
-        if (tv.getText().equals("轻触照亮"))
+        if (tv.getText().equals(lightTextOpen))
             open();
         else close();
     }
@@ -62,7 +68,7 @@ public class ScanLightView extends FrameLayout implements ScanLightViewCallBack 
         if (open != null)
             open.run();
         isOpen = true;
-        tv.setText("轻触关闭");
+        tv.setText(lightTextOff);
         iv.setImageDrawable(getContext().getResources().getDrawable(R.drawable.xzxing_light_open));
     }
 
@@ -70,7 +76,7 @@ public class ScanLightView extends FrameLayout implements ScanLightViewCallBack 
         if (close != null)
             close.run();
         isOpen = false;
-        tv.setText("轻触照亮");
+        tv.setText(lightTextOpen);
         iv.setImageDrawable(getContext().getResources().getDrawable(R.drawable.xzxing_light_close));
 
     }
