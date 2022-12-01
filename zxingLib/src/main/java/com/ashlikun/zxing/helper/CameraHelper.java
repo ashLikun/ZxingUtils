@@ -14,7 +14,7 @@ import androidx.annotation.FloatRange;
  * @author　　: 李坤
  * 创建时间: 2022/5/2 20:49
  * 邮箱　　：496546144@qq.com
- *
+ * <p>
  * 功能介绍： Camera2 API中一些计算
  */
 public class CameraHelper {
@@ -131,11 +131,18 @@ public class CameraHelper {
         image = reader.acquireLatestImage();
         if (image == null)
             return null;
-        byte[] data = getByteFromImage(image);
+        byte[] data = MlBitmapUtils.yuv420ThreePlanesToNV21(image.getPlanes(), image.getWidth(), image.getHeight()).array();
+//         getByteFromImage(image);
         image.close();
         return data;
     }
 
+    /**
+     * 这个方法有bug
+     *
+     * @param image
+     * @return
+     */
     private static byte[] getByteFromImage(Image image) {
 
         byte[] nv21;

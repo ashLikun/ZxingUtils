@@ -40,6 +40,7 @@ class Style2LocationView @JvmOverloads constructor(context: Context, attributeSe
     }
 
     override fun toLocation(result: Result, runnable: Runnable) {
+        animator?.cancel()
         var params = layoutParams
         result.qrPointF ?: return
         result.let {

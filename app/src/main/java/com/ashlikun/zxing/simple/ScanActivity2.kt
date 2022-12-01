@@ -34,6 +34,7 @@ class ScanActivity2 : AppCompatActivity() {
 //        }
         setContentView(binding.root)
         binding.zxingview2.synchLifeStart(this)
+        binding.zxingview2.onResult = {}
         initView()
 //        ZxingFragment fragment = new ZxingFragment();
 //        getSupportFragmentManager().beginTransaction()
