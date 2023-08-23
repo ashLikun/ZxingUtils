@@ -32,33 +32,12 @@ import java.lang.ref.WeakReference
  */
 typealias OnResult = (Result) -> Unit
 
-interface FreeInterface {
-    /***
-     * 提供一个扫码区域View, 将根据这个View剪裁数据
-     */
-    fun provideParseRectView(): View?
-
-    /***
-     * 提供一个扫描条View, 需实现[ScanBarCallBack]
-     */
-    fun provideScanBarView(): ScanBarCallBack?
-
-    /***
-     * 提供一个手电筒View,需实现[ScanLightViewCallBack]
-     */
-    fun provideLightView(): ScanLightViewCallBack?
-
-    /***
-     * 提供一个定位点View, 需实现[ScanLocViewCallBack]
-     */
-    fun provideLocView(): ScanLocViewCallBack?
-}
 
 abstract class FreeZxingView @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     def: Int = 0
-) : BaseCameraView(context, attributeSet, def), Handler.Callback, FreeInterface {
+) : BaseCameraView(context, attributeSet, def), Handler.Callback {
 
     private var ableCollect: AbleManager? = null
 
@@ -83,24 +62,31 @@ abstract class FreeZxingView @JvmOverloads constructor(
 
     /***
      * 自定义扫描条
+     * 提供一个扫描条View, 需实现[ScanBarCallBack]
      */
-    private val scanBarView: ScanBarCallBack? get() = provideScanBarView()
+    open var scanBarView: ScanBarCallBack? = null
 
     /**
-     *自定义手电筒
+     * 自定义手电筒
+     * 提供一个手电筒View,需实现[ScanLightViewCallBack]
      */
-    private val lightView: ScanLightViewCallBack? get() = provideLightView()
+    open var lightView: ScanLightViewCallBack? = null
 
     /***
      * 自定义定位点
+     * 提供一个定位点View, 需实现[ScanLocViewCallBack]
      */
-    private val locView: ScanLocViewCallBack?
-        get() = provideLocView()
+    open var locView: ScanLocViewCallBack? = null
 
     /***
      * 自定义解析区域
+     * 提供一个扫码区域View, 将根据这个View剪裁数据
      */
-    private val parseRect: View? get() = provideParseRectView()
+    open var parseRect: View = this
+
+    //View
+    abstract val provideFloorViewById: Int?
+    open val provideFloorView: View? = null
 
 
     private val busHandle by lazy {
@@ -199,10 +185,10 @@ abstract class FreeZxingView @JvmOverloads constructor(
         //关闭扫码条动画
         scanBarView?.stopScanAnimator()
 
-        //播放音频
+        //震动
         VibrateHelper.playVibrate()
 
-        //震动
+        //播放音频
         VibrateHelper.playBeep()
 
     }
@@ -239,16 +225,22 @@ abstract class FreeZxingView @JvmOverloads constructor(
      * 显示二维码位置, 动画播放完回调扫描结果
      */
     fun showQRLoc(result: Result) {
-        locView?.toLocation(result) {
+        if (locView == null) {
             resultBack(result)
             onResult?.invoke(result)
+        } else {
+            locView?.toLocation(result) {
+                resultBack(result)
+                onResult?.invoke(result)
+            }
         }
+
     }
 
     /***
      * 相机启动后的一些配置初始化
      */
-    private fun cameraStartLaterConfig() {
+    protected open fun cameraStartLaterConfig() {
         //自定义
         locView?.cameraStartLaterInit()
         //控件
@@ -301,15 +293,16 @@ abstract class FreeZxingView @JvmOverloads constructor(
         findViewById<View>(R.id.xZxingProvideViewId)?.let {
             removeView(it)
         }
-        LayoutInflater.from(context).inflate(provideFloorView(), this, false)
-            .let {
-                it.id = R.id.xZxingProvideViewId
-                addView(it)
-            }
+        if (provideFloorView != null || provideFloorViewById != null) {
+            (provideFloorView ?: LayoutInflater.from(context).inflate(provideFloorViewById!!, this, false))
+                .let {
+                    it.id = R.id.xZxingProvideViewId
+                    addView(it)
+                }
+        }
         cameraStartLaterConfig()
     }
 
-    abstract fun provideFloorView(): Int
 
     /***
      * 配置扫码类型

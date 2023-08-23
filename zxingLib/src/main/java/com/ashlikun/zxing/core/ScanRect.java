@@ -49,11 +49,7 @@ public class ScanRect {
      */
     private Rect scanR = null;
 
-    /***
-     * 将{{@link #r}对应到相机采集到数据旋转90°上形成一个矩形
-     */
-    @Deprecated
-    private Rect scanRR = null;
+
 
     public void setRect(RectF r) {
         //默认适配的是0度，也就是手机垂直方向拿着
@@ -69,7 +65,6 @@ public class ScanRect {
         this.r = r;
 
         scanR = null;
-        scanRR = null;
     }
 
     public Rect getScanR() {
@@ -78,17 +73,6 @@ public class ScanRect {
 
     public ScanRect setScanR(Rect scanR) {
         this.scanR = scanR;
-        return this;
-    }
-
-    @Deprecated
-    public Rect getScanRR() {
-        return scanRR;
-    }
-
-    @Deprecated
-    public ScanRect setScanRR(Rect scanRR) {
-        this.scanRR = scanRR;
         return this;
     }
 

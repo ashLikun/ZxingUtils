@@ -23,7 +23,7 @@ public class VibrateHelper {
 
 
     private static final float BEEP_VOLUME = 0.50f;
-    private static final int VIBRATE_DURATION = 10;
+    private static final int VIBRATE_DURATION = 100;
     private static SoundPool soundPool;
     private static int voiceId;
 
@@ -87,7 +87,9 @@ public class VibrateHelper {
             vibrator = (Vibrator) context.getSystemService(context.VIBRATOR_SERVICE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(VibrationEffect.createOneShot(millisecond, 25));
-            } else vibrator.vibrate(millisecond);
+            } else {
+                vibrator.vibrate(millisecond);
+            }
         }
 
         /**

@@ -12,7 +12,7 @@ import com.google.zxing.ResultPoint;
  * @author　　: 李坤
  * 创建时间: 2022/5/2 20:51
  * 邮箱　　：496546144@qq.com
- *
+ * <p>
  * 功能介绍：Zxing相关数据转换
  */
 public class ScanHelper {
@@ -343,13 +343,6 @@ public class ScanHelper {
                     Config.scanRect.getScanR().right = (int) (cropRect.bottom * dataWidth);
                     Config.scanRect.getScanR().bottom = (int) ((1f - (cropRect.left)) * dataHeight);
                 }
-//                if (Config.scanRect.getScanRR() == null) {
-//                    Config.scanRect.setScanRR(new Rect());
-//                    Config.scanRect.getScanRR().left = (int) (cropRect.left * dataHeight);
-//                    Config.scanRect.getScanRR().top = (int) (cropRect.top * dataWidth);
-//                    Config.scanRect.getScanRR().right = (int) (cropRect.right * dataHeight);
-//                    Config.scanRect.getScanRR().bottom = (int) (cropRect.bottom * dataWidth);
-//                }
                 return Config.scanRect.getScanR();
             }
         } catch (Exception ignored) {

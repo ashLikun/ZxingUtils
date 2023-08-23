@@ -12,6 +12,7 @@ import com.ashlikun.zxing.view.ScanBarCallBack
 import com.ashlikun.zxing.view.ScanLightViewCallBack
 import com.ashlikun.zxing.view.ScanLocViewCallBack
 import com.google.android.cameraview.AspectRatio
+import com.google.android.cameraview.CameraView
 
 /**
  * @author　　: 李坤
@@ -23,38 +24,19 @@ import com.google.android.cameraview.AspectRatio
 open class ZxingStyle1View @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, def: Int = 0) :
     FreeZxingView(context, attributeSet, def) {
 
-    val scanRectView
-        get() = findViewById<View>(R.id.scanRectView)
-    val lightView
-        get() = findViewById<ScanLightView>(R.id.lightView)
-
-    val locView
-        get() = findViewById<Style1LocationView>(R.id.locView)
-
-    val scanBarView
-        get() = findViewById<ScanBarView>(R.id.scanBarView)
-
+    override val provideFloorViewById: Int
+        get() = R.layout.xzxing_style1_floorview
 
     override fun resultBack(content: Result) {
 
     }
 
-    override fun provideFloorView(): Int {
-        return R.layout.xzxing_style1_floorview
-    }
-
-    override fun provideParseRectView() = scanRectView
-
-    override fun provideLightView(): ScanLightViewCallBack? {
-        return lightView
-    }
-
-    override fun provideLocView(): ScanLocViewCallBack? {
-        return locView
-    }
-
-    override fun provideScanBarView(): ScanBarCallBack? {
-        return scanBarView
+    override fun onCameraOpenBack(camera: CameraView) {
+        super.onCameraOpenBack(camera)
+        parseRect = findViewById(R.id.scanRectView)
+        lightView = findViewById<ScanLightView>(R.id.lightView)
+        locView = findViewById<Style1LocationView>(R.id.locView)
+        scanBarView = findViewById<ScanBarView>(R.id.scanBarView)
     }
 
     /***
@@ -76,6 +58,7 @@ open class ZxingStyle1View @JvmOverloads constructor(context: Context, attribute
     open fun toParse(bitmap: Bitmap) {
         parseBitmap(bitmap)
     }
+
 
     override fun provideAspectRatio(): AspectRatio {
         return AspectRatio.of(16, 9)

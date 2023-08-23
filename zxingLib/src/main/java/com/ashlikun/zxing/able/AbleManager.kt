@@ -3,13 +3,18 @@ package com.ashlikun.zxing.able
 import android.graphics.Rect
 import android.os.Handler
 import android.os.HandlerThread
+import android.util.Log
 import com.ashlikun.zxing.Config
 import com.ashlikun.zxing.TypeRunnable
 import com.ashlikun.zxing.WorkThreadServer
 import com.ashlikun.zxing.core.Dispatch
 import com.ashlikun.zxing.core.GrayScaleDispatch
+import com.ashlikun.zxing.helper.ScanHelper
 import com.google.zxing.PlanarYUVLuminanceSource
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.system.measureNanoTime
+import kotlin.system.measureTimeMillis
+import kotlin.time.measureTime
 
 /**
  * @author　　: 李坤
@@ -57,12 +62,10 @@ class AbleManager private constructor(handler: Handler) : com.ashlikun.zxing.abl
      * 相机实时数据解析
      */
     public override fun cusAction(data: ByteArray, dataWidth: Int, dataHeight: Int) {
-        executeToParseWay2(
-            data,
-            dataWidth,
-            dataHeight,
-            com.ashlikun.zxing.helper.ScanHelper.getScanByteRect(dataWidth, dataHeight)
-        )
+//        val aa = measureTimeMillis {
+        executeToParseWay2(data, dataWidth, dataHeight, ScanHelper.getScanByteRect(dataWidth, dataHeight))
+//        }
+//        Log.e("解析一针数据时间", aa.toString())
     }
 
     /***

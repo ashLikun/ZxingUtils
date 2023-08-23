@@ -268,7 +268,6 @@ public class CameraView extends FrameLayout {
             r.top = edgeRatio[1];
             r.bottom = edgeRatio[3];
         }
-
         return r;
     }
 
@@ -278,13 +277,12 @@ public class CameraView extends FrameLayout {
      * 确保View测量流程完成后调用，保险起见可以外部直接调用post{}
      */
     protected void defineScanParseRect(View view) {
-
-        if (view == null)
-            return;
-
+        if (view == null) {
+            //未设置直接就是当前View
+            view = this;
+        }
         Config.scanRect.setRect(preRect2RealDataRect(view));
         Config.scanRect.setScanR(null);
-        Config.scanRect.setScanRR(null);
         mImpl.rectMeteringWithFocus(Config.scanRect.getRect());
     }
 

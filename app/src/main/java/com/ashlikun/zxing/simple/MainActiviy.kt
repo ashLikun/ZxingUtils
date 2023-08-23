@@ -28,6 +28,8 @@ class MainActiviy : AppCompatActivity() {
             ScanActivity.startSelf(this)
         if (view == binding.style2)
             ScanActivity2.startSelf(this)
+        if (view == binding.style0)
+            ScanActivity0.startSelf(this)
     }
 
 }
