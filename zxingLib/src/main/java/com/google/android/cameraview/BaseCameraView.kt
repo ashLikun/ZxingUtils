@@ -107,7 +107,7 @@ abstract class BaseCameraView @JvmOverloads constructor(
     /***
      *  外部使用该方法启动相机
      */
-     fun onCameraResume() {
+    fun onCameraResume() {
         if (isShoudCreateOpen) {
             return
         }
@@ -120,7 +120,7 @@ abstract class BaseCameraView @JvmOverloads constructor(
     /***
      *  外部使用该方法暂停相机
      */
-     fun onCameraPause() {
+    fun onCameraPause() {
         closeCameraBefore()
         closeCamera()
         isShoudCreateOpen = false
